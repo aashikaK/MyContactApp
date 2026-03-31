@@ -61,8 +61,10 @@ public class DatabaseHelper extends SQLiteOpenHelper {
         ArrayList<Contact> list = new ArrayList<>();
 
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_NAME, null);
-
+        Cursor cursor = db.rawQuery(
+                "SELECT * FROM " + TABLE_NAME + " ORDER BY " + COLUMN_NAME + " ASC",
+                null
+        );
         if (cursor.moveToFirst()) {
             do {
                 Contact contact = new Contact();
