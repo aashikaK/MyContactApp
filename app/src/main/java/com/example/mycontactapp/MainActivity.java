@@ -30,7 +30,20 @@ public class MainActivity extends AppCompatActivity {
 
         contactList = db.getAllContacts();
 
-        adapter = new ContactAdapter(contactList);
+        adapter = new ContactAdapter(contactList, new ContactAdapter.OnItemClickListener() {
+            @Override
+            public void onClick(Contact contact) {
+
+                Intent intent = new Intent(MainActivity.this, AddContactActivity.class);
+
+                intent.putExtra("id", contact.getId());
+                intent.putExtra("name", contact.getName());
+                intent.putExtra("phone", contact.getPhone());
+
+                startActivity(intent);
+            }
+        });
+
         recyclerView.setAdapter(adapter);
         btnAdd = findViewById(R.id.btnAdd);
 

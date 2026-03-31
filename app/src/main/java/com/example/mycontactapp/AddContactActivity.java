@@ -8,10 +8,12 @@ import android.widget.EditText;
 import androidx.appcompat.app.AppCompatActivity;
 
 public class AddContactActivity extends AppCompatActivity {
-
+    Button btnDelete;
     EditText etName, etPhone;
     Button btnSave;
     DatabaseHelper db;
+
+    int id = -1;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -21,8 +23,16 @@ public class AddContactActivity extends AppCompatActivity {
         etName = findViewById(R.id.etName);
         etPhone = findViewById(R.id.etPhone);
         btnSave = findViewById(R.id.btnSave);
+        btnDelete= findViewById(R.id.btnDelete);
 
         db = new DatabaseHelper(this);
+
+        if (getIntent().hasExtra("id")) {
+
+            id = getIntent().getIntExtra("id", -1);
+            etName.setText(getIntent().getStringExtra("name"));
+            etPhone.setText(getIntent().getStringExtra("phone"));
+        }
 
         btnSave.setOnClickListener(new View.OnClickListener() {
             @Override
@@ -33,11 +43,23 @@ public class AddContactActivity extends AppCompatActivity {
 
                 if (!name.isEmpty() && !phone.isEmpty()) {
 
-                    db.addContact(new Contact(name, phone));
+                    if (id == -1) {
+                        db.addContact(new Contact(name, phone));
+                    } else {
+                        db.updateContact(new Contact(id, name, phone));
+                    }
 
-                    finish(); // go back to main screen
+                    finish(); // go back
                 }
             }
+        });
+        btnDelete.setOnClickListener(v -> {
+
+            if (id != -1) {
+                db.deleteContact(id);
+            }
+
+            finish();
         });
     }
 }
